@@ -1,14 +1,22 @@
-from colorama import Fore, init
+try:
+    from colorama import Fore, init
+    is_colorama_installed = True
+except ModuleNotFoundError:
+    is_colorama_installed = False
 
 from file_interaction.file_class import Files
 
 
 class Displayer:
     def _colorize_string(self, s: str) -> str:
+        if not is_colorama_installed:
+            return s
+
         if self.file_type == '<DIR>':
             s = Fore.YELLOW + s + Fore.RESET
         if self.file_extension == 'py':
             s = Fore.CYAN + s + Fore.RESET
+
         return s
 
     def _create_end_string(self) -> str:
