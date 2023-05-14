@@ -33,7 +33,7 @@ def date_translate(date: str) -> str:
 
 
 def parse_name(name: str) -> Tuple[str, str]:
-    delimiter_idx = name.rfind('(')
+    delimiter_idx = name.rfind('{')
     if delimiter_idx == -1:
         return name, ''
     name_eng, name_rus = name[:delimiter_idx-1], name[delimiter_idx+1:-1]

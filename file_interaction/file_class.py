@@ -35,13 +35,13 @@ class Files:
     def __sort_by_creation_date_ascending(self, file: File) -> int:
         add = 0
         if file.type == '<DIR>':
-            add = 10**9
+            add = -10**9
         return file.modification_date_secounds + add
 
     def __sort_by_creation_date_descending(self, file: File) -> int:
         add = 0
         if file.type == '<DIR>':
-            add = 10**9
+            add = -10**9
         return -file.modification_date_secounds + add
 
     def __sort_by_name_ascending(self, file: File) -> str:
