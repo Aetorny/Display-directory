@@ -1,9 +1,10 @@
 import os
 from time import ctime
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from directory_information import DISPLAY_DIRECTORY
 from file_interaction.file_class import File, Files
+from config import less
 
 __translates_month = {
     'Jan': 'Январь',
@@ -40,34 +41,41 @@ def parse_name(name: str) -> Tuple[str, str]:
     return name_eng, name_rus
 
 
-def parse_files(files_names: List[str]) -> Files:
+def parse_files(files_names: List[str], directories_of_folders: Optional[List[str]] = None) -> Files:
     files = Files()
+    directory = DISPLAY_DIRECTORY
 
     files.files = []
-    for file_name in files_names:
+    for idx, file_name in enumerate(files_names):
+        if directories_of_folders:
+            directory = directories_of_folders[idx]
+        
         extension_delimiter = file_name.rfind('.')
-        if extension_delimiter != -1:
+        if extension_delimiter > 0:
             name, extension = file_name[:extension_delimiter], file_name[extension_delimiter+1:]
         else:
             name, extension = file_name[:], ''
 
         name_eng, name_rus = parse_name(name)
 
-        if os.path.isdir(f'{DISPLAY_DIRECTORY}\\{file_name}'):
+        if os.path.isdir(f'{directory}\\{file_name}'):
             file_type = '<DIR>'
         else:
             file_type = ''
 
         modification_date_secounds = int(
-            os.path.getmtime(f'{DISPLAY_DIRECTORY}\\{file_name}'))
-        modification_date = ctime(modification_date_secounds)
-        modification_date = date_translate(modification_date)
+            os.path.getmtime(f'{directory}\\{file_name}'))
+        if not less:
+            modification_date = ctime(modification_date_secounds)
+            modification_date = date_translate(modification_date)
+        else:
+            modification_date = ''
 
         file = File()
         file.name_eng = name_eng
         file.name_rus = name_rus
         file.extension = extension
-        file.type = file_type
+        file.type = file_type  # type: ignore
         file.modification_date = modification_date
         file.modification_date_secounds = modification_date_secounds
 
